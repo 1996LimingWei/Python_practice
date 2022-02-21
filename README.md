@@ -1,2 +1,3 @@
-# SentenceCount
-Codes for achieving various sentence-count functions 
+# Python Pratices
+
+Codes for displaying various practices using Python
