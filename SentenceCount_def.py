@@ -79,5 +79,5 @@ def Count_words_f(folder):
 		count = Count_words(filename)
 		counts += count
 	return counts
-
+'''客户只需在括号内输入文件夹地址即可：'''
 print(Count_rows_f(folder_path)+ Count_words_f(folder_path))
