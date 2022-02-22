@@ -30,6 +30,14 @@ def counts_rows_type(typepaths):
 	type_path = glob.glob(typepaths)
 	counts = [count_rows(file) for file in type_path]
 	return sum(counts)
+def counts_words_type(typepaths):
+	type_path = glob.glob(typepaths)
+	counts = [Count_words(file) for file in type_path]
+	return sum(counts)
+def counts_char_type(typepaths):
+	type_path = glob.glob(typepaths)
+	counts = [Count_char(file) for file in type_path]
+	return sum(counts)
 
 def Count_words(file_path):
 	text = (open(file_path)).read()
@@ -44,6 +52,13 @@ def Count_words_f(folder):
 	for filename in os.listdir(folder):
 		filename = folder + filename
 		count = Count_words(filename)
+		counts += count
+	return counts
+def Count_char_f(folder):
+	counts = 0
+	for filename in os.listdir(folder):
+		filename = folder + filename
+		count = Count_char(filename)
 		counts += count
 	return counts
 
@@ -65,18 +80,27 @@ if __name__ == "__main__":
 				break
 	try:
 		count = Count(file_dir)
+		words = Count_words(file_dir)
+		char = Count_char(file_dir)
+		print("number of lines contained in the file you choose is: %s, \n number of words is %s, \n number of characters is: %s" % (count,words,char))
 	except:
 		try:
 			count = Count_rows_f(file_dir)
+			words = Count_words_f(file_dir)
+			char = Count_char_f(file_dir)
+			print("number of lines contained in the directory you choose is: %s, \n number of words is %s, \n number of characters is: %s" % (count,words,char))
 		except:
 			try:
 				count = counts_rows_type(file_dir)
+				words = counts_words_type(file_dir)
+				char = counts_char_type(file_dir)
+				print("number of lines contained in the directory you choose is: %s, \n number of words is %s, \n number of characters is: %s" % (count,words,char))
+
 			except:
 				print("invalid file or directory path input. Program will exit...")
-	print("number of lines contained in the file/directory you choose is:",count)
 
 ##用户运行程序后，可根据提示选择想查找行数的文件、文件夹
 
 	#file_path = 'C:/Users/v-limingwei/source/repos/SentenceCount/test/Test.txt'
 	#folder_path = "C:/Users/v-limingwei/source/repos/SentenceCount/test/"
-	#path = "C:\Users\v-limingwei\source\repos\SentenceCount\SentenceCount\SentenceCount_v2.py"
+	#path = "C:\Users\v-limingwei\source\repos\SentenceCount\SentenceCount\SentenceCount_v3.py"
