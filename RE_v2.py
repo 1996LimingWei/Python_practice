@@ -6,7 +6,7 @@ return a corresponding match object. Return None if the string does not match th
 note that this is different from a zero-length match.
 '''
 test_string1 = "!@#asd232"
-if re.match("^(?=.*[a-zA-Z])(?=.*[0-9])", test_string1): # match signle characters between ! and ~, asii index 33-126
+if re.match("^(?=.*[a-zA-Z])(?=.*[0-9])", test_string1): # ?= lookahead assertion. Matches if the following matches next, but doesn’t consume any of the string.
     print("Q1 RE matches", test_string1)
 else:
     print("Q1 RE does not matches", test_string1)
@@ -15,11 +15,11 @@ else:
 test_string2 = "abc123"
 test_string_reje = "ab@12"
 pattern = "^[A-Za-z0-9/]*$"
-if re.match(pattern, test_string2): # match signle characters between ! and ~
+if re.match(pattern, test_string2): 
     print("Q2 RE matches", test_string2)
 else:
     print("Q2 RE does not matches", test_string2)
-if re.match(pattern, test_string_reje): # match signle characters between ! and ~
+if re.match(pattern, test_string_reje): 
     print("Q2 RE does not matches",test_string_reje)
 else:
     print("Q2 RE does not matches", test_string_reje)  
