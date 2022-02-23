@@ -6,8 +6,8 @@ return a corresponding match object. Return None if the string does not match th
 note that this is different from a zero-length match.
 '''
 test_string1 = "!@#asd232"
-if re.match("^(?=.*[a-zA-Z])(?=.*[0-9])", test_string1): # ?= lookahead assertion. Matches if the following matches next, but doesn’t consume any of the string.
-    print("Q1 RE matches", test_string1)
+if re.match("^(?=.*[a-zA-Z])(?=.*[0-9])", test_string1)): # ?= lookahead assertion. Matches if the following matches next, but doesn’t consume any of the string.
+    print("Q1 RE matches", test_string1) 
 else:
     print("Q1 RE does not matches", test_string1)
 
