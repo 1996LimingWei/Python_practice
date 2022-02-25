@@ -9,7 +9,7 @@ def get_requests(url): # request the url and apply html parse using bs4
     soup = BeautifulSoup(responses, "html.parser")
     return soup
 
-def get_sub (soup): # get the subpage content function
+def get_sub (soup): # get the subpage keywords definition content function
     content =[] #store text in subpage
     for a_ in soup.find_all('div', attrs={'class': 'content'}): # locate the text by layers of element 
         keyword = a_.find('nav', attrs={'id': 'center-doc-outline'})
@@ -25,16 +25,25 @@ def get_date(soup): # get the subpage date function
     for _a in soup.find_all('ul', attrs={'class': 'metadata page-metadata'}):
         for d in _a.find_all('time', attrs={'aria-label': 'Article review date'}):
             time_ = d.get_text()[-17:]
-            print(time_)
             date.append(time_) 
         date = list(filter(None, date))
     return date
-
+def get_li(soup): # get the subpage other content function
+    li = []
+    for _a_ in soup.find_all('div', attrs={'class': 'content'}):
+        for d_ in _a_.find_all('ul'):
+            for sub_li in d_.find_all('li'):
+                sub_li_ = sub_li.get_text().strip()
+                print(sub_li_)
+                li.append(sub_li_) 
+            li = list(filter(None, li))
+    return li
 def get_result(soup): # get results, including keywords and href
     keywords = []
     hrefs = []
     defin=[]
     date = []
+    li=[]
     for a in soup.find_all('section', attrs={'class': 'row'}):
         Keyword = a.find_all('div', attrs={'class': 'column'})
         for i in Keyword:
@@ -56,42 +65,48 @@ def get_result(soup): # get results, including keywords and href
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
+                li.append(get_li(get_requests(href)))
             elif (url[1] == ".") & (url[4] == "."):
                 href = add_sharp
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
+                li.append(get_li(get_requests(href)))
             elif (url[1] != "."):
                 href = add_keyword
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
+                li.append(get_li(get_requests(href)))
         elif len(url)>1 & len(url)<=6:
             if url[1] == ".":
                 href = add_refer
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
+                li.append(get_li(get_requests(href)))
             else:
                 href = add_keyword
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
+                li.append(get_li(get_requests(href)))
         else:    
             href = add_keyword
             hrefs.append(href)
             defin.append(get_sub(get_requests(href)))
             date.append(get_date(get_requests(href)))
+            li.append(get_li(get_requests(href)))
         
     print("The number of rows is",len(date))
 
     #create csv and write rows
     with open('Keywords1.csv', 'w',newline='') as csvfile:
-        fieldnames = ['key', 'href','content','date'] #headers
+        fieldnames = ['key', 'href','content','subcontent','date'] #headers
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for num in range(len(keywords)):
-            writer.writerow({'key': keywords[num], 'href': hrefs[num],'content':defin[num],'date':date[num]})
+            writer.writerow({'key': keywords[num], 'href': hrefs[num],'content':defin[num],'subcontent':li[num],'date':date[num]})
 
 if __name__ == '__main__':
     headers = {
@@ -104,11 +119,4 @@ if __name__ == '__main__':
     soup = get_requests(base_url)  
     get_result(soup) 
     print("My program took", time.time() - start_time, "to run get the run time")
-    
-    
-    
-    
-    
-    
-    
     
