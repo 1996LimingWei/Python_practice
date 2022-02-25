@@ -17,7 +17,7 @@ def get_sub (soup): # get the subpage keywords definition content function
         for i_ in keywords:
             key = i_.get_text()#.replace("\n",",").split(",")
             content.append(key)
-        words = list(filter(None, content))
+    words = list(filter(None, content))
     return words
 
 def get_date(soup): # get the subpage date function
@@ -26,7 +26,7 @@ def get_date(soup): # get the subpage date function
         for d in _a.find_all('time', attrs={'aria-label': 'Article review date'}):
             time_ = d.get_text()[-17:]
             date.append(time_) 
-        date = list(filter(None, date))
+    date = list(filter(None, date))
     return date
 def get_li(soup): # get the subpage other content function
     li = []
@@ -34,16 +34,23 @@ def get_li(soup): # get the subpage other content function
         for d_ in _a_.find_all('ul'):
             for sub_li in d_.find_all('li'):
                 sub_li_ = sub_li.get_text().strip()
-                print(sub_li_)
                 li.append(sub_li_) 
-            li = list(filter(None, li))
+    li = list(filter(None, li))[2:]
     return li
+def get_code(soup):
+    try:
+        code = soup.select('div pre code')
+    except:
+         code = ["no example codes"]
+    #codes = list(filter(None, codes))[1:]
+    return code
 def get_result(soup): # get results, including keywords and href
     keywords = []
     hrefs = []
     defin=[]
     date = []
     li=[]
+    codes= []
     for a in soup.find_all('section', attrs={'class': 'row'}):
         Keyword = a.find_all('div', attrs={'class': 'column'})
         for i in Keyword:
@@ -66,18 +73,21 @@ def get_result(soup): # get results, including keywords and href
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
                 li.append(get_li(get_requests(href)))
+                codes.append(get_code(get_requests(href)))
             elif (url[1] == ".") & (url[4] == "."):
                 href = add_sharp
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
                 li.append(get_li(get_requests(href)))
+                codes.append(get_code(get_requests(href)))
             elif (url[1] != "."):
                 href = add_keyword
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
                 li.append(get_li(get_requests(href)))
+                codes.append(get_code(get_requests(href)))
         elif len(url)>1 & len(url)<=6:
             if url[1] == ".":
                 href = add_refer
@@ -85,28 +95,31 @@ def get_result(soup): # get results, including keywords and href
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
                 li.append(get_li(get_requests(href)))
+                codes.append(get_code(get_requests(href)))
             else:
                 href = add_keyword
                 hrefs.append(href)
                 defin.append(get_sub(get_requests(href)))
                 date.append(get_date(get_requests(href)))
                 li.append(get_li(get_requests(href)))
+                codes.append(get_code(get_requests(href)))
         else:    
             href = add_keyword
             hrefs.append(href)
             defin.append(get_sub(get_requests(href)))
             date.append(get_date(get_requests(href)))
             li.append(get_li(get_requests(href)))
+            codes.append(get_code(get_requests(href)))
         
     print("The number of rows is",len(date))
 
     #create csv and write rows
     with open('Keywords1.csv', 'w',newline='') as csvfile:
-        fieldnames = ['key', 'href','content','subcontent','date'] #headers
+        fieldnames = ['key', 'href','content','subcontent','date','codes'] #headers
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for num in range(len(keywords)):
-            writer.writerow({'key': keywords[num], 'href': hrefs[num],'content':defin[num],'subcontent':li[num],'date':date[num]})
+            writer.writerow({'key': keywords[num], 'href': hrefs[num],'content':defin[num],'subcontent':li[num],'codes':codes[num],'date':date[num]})
 
 if __name__ == '__main__':
     headers = {
@@ -119,4 +132,7 @@ if __name__ == '__main__':
     soup = get_requests(base_url)  
     get_result(soup) 
     print("My program took", time.time() - start_time, "to run get the run time")
+    
+    
+  
     
