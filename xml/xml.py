@@ -2,11 +2,11 @@
 
 import xml.etree.ElementTree as ET
 import  lxml.etree as et
-#method 1
+
 tree = ET.parse("Config.xml")
 root = tree.getroot()
 #print(root)
-#method 2
+
 data = open("Config.xml").read()
 root = ET.fromstring(data)
 #print(root)
@@ -35,9 +35,12 @@ for node in root.iter('TrainingPaths'):
 ''''we use parser=et.XMLParser(remove_comments=True) to ignore comments '''
 tree = ET.parse("Config.xml",parser=et.XMLParser(remove_comments=True))
 root = tree.getroot()
+'''how to retain comments'''
+tree = et.parse('Config.xml', parser=et.XMLParser(remove_comments=False))
+root = tree.getroot()
 
 #Q4
-'''create a new xml file'''
+#create a new xml file
 def create_XML(fileName) :
       
     root = ET.Element("sample")
@@ -51,4 +54,3 @@ def create_XML(fileName) :
     with open (fileName, "wb") as files :
         tree.write(files)
 if __name__ == "__main__": 
-    create_XML("sample.xml")
