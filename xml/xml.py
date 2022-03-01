@@ -2,11 +2,11 @@
 
 import xml.etree.ElementTree as ET
 import  lxml.etree as et
-
+#method 1
 tree = ET.parse("Config.xml")
 root = tree.getroot()
 #print(root)
-
+#method 2
 data = open("Config.xml").read()
 root = ET.fromstring(data)
 #print(root)
